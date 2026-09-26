@@ -133,9 +133,9 @@ var KEY='finanzapp_v1';
 var CATS_G=['Supermercado','Comida afuera','Transporte','Hogar y alquiler','Servicios','Salud','Ropa','Ocio','Educación','Otros'];
 var CATS_I=['Sueldo','Extra','Otros ingresos'];
 var CATS_A=['Plazo fijo','Fondos (FCI)','Dólares','Cripto','Acciones y CEDEARs','Fondo de emergencia','Otros ahorros'];
-/* Licencias: solo se guarda el hash de cada código, nunca el código. */
-var PEPPER='fz26|';
-/*LIC*/var LIC={"a37b8e084517120b":"B","4d3b7d99f422654d":"B","32dfd97de6238d3a":"B","19721ab398d29aa5":"B","4c42aa5864f8e172":"B","d2f9af9e4e0ef329":"B","d840ead9e194ba2c":"B","1c1c51bb05c8fdcf":"B","0176e1f0393d3a0f":"B","6e24d7ba92238404":"B","33385ee688badd06":"B","ce20d0818105face":"B","a960b4be7c0ff564":"B","47918ef3abda8835":"B","406bb3c3c0d3c1a1":"B","ff7261a6c1aa2aaf":"B","2d211d45f93062ca":"B","0037b0706d5b6303":"B","66ba63c06b3c36c2":"B","c48b113229cce939":"B","1361ecf9665adbbc":"B","5312f92723d88509":"B","4cb5d13f15439849":"B","696ebc3be44f0da9":"B","baa7e51a0c20e577":"B","8491b1bc29b2070a":"B","0c0c252804764f04":"B","e5b63b0a5d0194cf":"B","bb9315cdee832c9e":"B","6e40f337babfe689":"B","f080a4f5e881221d":"B","caf03fdbb7c8f0b1":"B","0c36518c7b5724be":"B","5be1b50a986583aa":"B","b39fc3a90a1adfaf":"B","0eea346b1e776fd9":"B","2f09b0333e31a224":"B","cf81de5b4b53f8f4":"B","194358962ec18925":"B","1ca12cbbafb3071b":"B","3cce440598dcbd26":"B","0c2df25c67817fea":"B","565b76842e7258b5":"B","91d4163d02373432":"B","f6d752e3f19c86f8":"B","c15f2c8f5d4e1412":"B","798e880c4b6ad11d":"B","9b2193c817efecc9":"B","8b983721a4de991d":"B","adfea3b7cd6f9bcd":"B","857fb102a3aa7e38":"P","9bfad8eb665bc8f0":"P","c3cf8de3c873329f":"P","f009c5be29f10b37":"P","164505eedf1e5954":"P","345bb52700d4aeca":"P","cf59cb6d0188d97c":"P","135cc61ec3e07711":"P","2eb83e0c9597ce8f":"P","a4836ff6643a36fd":"P","09ae01761089281f":"P","86d6497a22519b3a":"P","a663d47e3ba32f48":"P","9e7ba96605fb7710":"P","a9690ed7324897f2":"P","7c4c2fd25e60943f":"P","2ba18b9209735d01":"P","18616f5bc4604683":"P","57c2f6ad6e9780db":"P","5d223e58e5f7c5bc":"P","e6bb3bc1e460ee2d":"P","2b570be4da402cdd":"P","9e4ee80eb381bd08":"P","9521b109f6bedc50":"P","695af9102fc411a9":"P","937c226563395e37":"P","816032c35ce2183b":"P","19be5d7ba35f69f6":"P","c805c8da8b3efca0":"P","948ece0ae43d05ab":"P","d5aadaab90355dc0":"P","026e9091c8b0a112":"P","b6b27a7c0fe2447c":"P","9910af752029c9cf":"P","4fe512243a521c40":"P","d1291fef107e63c5":"P","ae87b679cb62eb10":"P","4901b885c4ecb2d2":"P","c9b0676db06d6145":"P","388f2da5921deab0":"P","1511035049c62995":"P","34d6dfca498d753e":"P","c55fef0ba17dfaa4":"P","044e6c10fca78def":"P","eaf2661cd03f148a":"P","29246555bad07c84":"P","c2b9c4bef8b61090":"P","c171ca4668bdfc32":"P","9cad98080c59a987":"P","4c8c6a0f88e4b497":"P"};/*/LIC*/
+/* Licencias: cada código se valida contra el servidor de activación (planilla de Google). */
+var API='https://script.google.com/macros/s/AKfycbzpIVEvZodYQx7YTMfk2h4xbNAhF0Lxmb0rXqJO_mpKipoSy_S7BuT23B58pPHBGS_s/exec';
+var VERIF_CADA=6*3600000;
 var PLAN_TXT={B:'Básico',P:'Premium'};
 var MEDIOS=['Débito','Crédito','Efectivo','Billetera','Transferencia'];
 var COLORES={dorado:['#D4AF5A','#8A6A1F','Dorado'],verde:['#5FBF8A','#2E7D52','Verde'],azul:['#6FA8E8','#2A62A8','Azul'],violeta:['#A78BFA','#6D4FD1','Violeta'],coral:['#EE8A6B','#B5502F','Coral'],rosa:['#E88BB5','#A8406F','Rosa']};
@@ -194,12 +194,13 @@ var RULES=[
 [/\b(sueldo|salario|aguinaldo)/,'Sueldo']
 ];
 
-function defaults(){return {v:1,onboarded:false,demo:false,perfil:{nombre:'',nac:'',cobro:1,tono:'humor'},ui:{color:'dorado',modo:'oscuro',verUSD:false,monedaDef:'ARS'},dolar:{tipo:'oficial',venta:null,fecha:null,fuente:null},alertas:{on:true,anticip:1,aumentos:true,recordatorio:true,presu:true},lic:{plan:null,h:null,fecha:null},presu:{},presuDemo:false,novVistas:[],movs:[],vencs:[]};}
+function defaults(){return {v:1,onboarded:false,demo:false,perfil:{nombre:'',nac:'',cobro:1,tono:'humor'},ui:{color:'dorado',modo:'oscuro',verUSD:false,monedaDef:'ARS'},dolar:{tipo:'oficial',venta:null,fecha:null,fuente:null},alertas:{on:true,anticip:1,aumentos:true,recordatorio:true,presu:true},lic:{plan:null,code:null,fecha:null,chk:0},dev:'',presu:{},presuDemo:false,novVistas:[],movs:[],vencs:[]};}
 var S=defaults();
 var storageOk=true;
 try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S=Object.assign(defaults(),o);['perfil','ui','dolar','alertas','lic'].forEach(function(k){S[k]=Object.assign(defaults()[k],o[k]||{});});}}catch(e){storageOk=false;}
-/* Una licencia guardada se vuelve a validar contra la lista vigente. */
-if(S.lic.plan&&(!S.lic.h||LIC[S.lic.h]!==S.lic.plan))S.lic={plan:null,h:null,fecha:null};
+/* Licencias de versiones anteriores (sin código guardado) se vuelven a activar. */
+if(S.lic.plan&&!S.lic.code)S.lic={plan:null,code:null,fecha:null,chk:0};
+if(!S.dev){var rb=new Uint8Array(16);try{crypto.getRandomValues(rb);}catch(e){for(var ri=0;ri<16;ri++)rb[ri]=Math.floor(Math.random()*256);}S.dev=Array.from(rb).map(function(x){return x.toString(16).padStart(2,'0');}).join('');try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){storageOk=false;}}
 
 var tab='inicio',mesOff=0,D=null,confirmDel=null,dolarErr=false,dolarLoading=false;
@@ -237,8 +238,9 @@ function ahorros(p){return S.movs.filter(function(m){return m.tipo==='ahorro'&&i
 function premium(){return S.lic.plan==='P';}
 function lockCard(titulo,texto){return '<div class="card" style="display:flex;flex-direction:column;gap:10px;border-style:dashed"><div class="row"><div class="ico" style="background:var(--accent-bg)">'+ic('lock',20)+'</div><div class="grow"><span style="font-weight:700">'+titulo+' <span class="pill">PREMIUM</span></span><span class="small muted">'+texto+'</span></div></div><button type="button" class="btn ghost sm" style="width:100%" data-act="tab" data-tab="ajustes">Tengo un código Premium</button></div>';}
 function normCode(c){return String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
-function sha16(t){if(!(window.crypto&&crypto.subtle))return Promise.reject(new Error('nocrypto'));return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('').slice(0,16);});}
-function checkCode(c){var n=normCode(c);if(n.length<8)return Promise.resolve(null);return sha16(PEPPER+n).then(function(h){return LIC[h]?{plan:LIC[h],h:h}:null;});}
+function api(accion,code){var url=API+'?accion='+accion+'&codigo='+encodeURIComponent(normCode(code))+'&dispositivo='+S.dev;var ctrl=typeof AbortController!=='undefined'?new AbortController():null;var to=setTimeout(function(){if(ctrl)ctrl.abort();},15000);return fetch(url,ctrl?{signal:ctrl.signal}:{}).then(function(r){if(!r.ok)throw new Error('http');return r.json();}).then(function(j){clearTimeout(to);return j;},function(e){clearTimeout(to);throw e;});}
+var MOTIVO={invalido:'Ese código no existe. Revisá que esté completo (ej: FZB-7K2Q-M9XT).',usado:'Este código ya se activó en otro celular. Si cambiaste de teléfono, pedile a quien te lo vendió que lo libere.',anulado:'Este código fue dado de baja.',otro_dispositivo:'Tu código se activó en otro celular. Si cambiaste de teléfono, pedile a quien te lo vendió que lo libere.'};
+function verificarLic(){if(!S.lic.code||!window.fetch)return;if(Date.now()-(S.lic.chk||0)<VERIF_CADA)return;if(navigator.onLine===false)return;api('verificar',S.lic.code).then(function(j){if(j&&j.ok){S.lic.plan=j.plan;S.lic.chk=Date.now();save();render();}else if(j&&(j.motivo==='anulado'||j.motivo==='otro_dispositivo'||j.motivo==='invalido')){S.lic={plan:null,code:null,fecha:null,chk:0};save();actErr=MOTIVO[j.motivo];render();}}).catch(function(){});}
 function pct(a,b){if(!b)return null;return (a-b)/b*100;}
 function deltaHtml(v,sfx){if(v==null)return '';var r=Math.round(v*10)/10;if(Math.abs(r)<0.5)return '<span class="delta-eq xs">= 0%</span>';return '<span class="'+(r>0?'delta-up':'delta-down')+' xs">'+(r>0?'▲ ':'▼ ')+Math.abs(r).toLocaleString('es-AR',{maximumFractionDigits:1})+'%'+(sfx||'')+'</span>';}
 
@@ -358,7 +360,7 @@ h+='<div class="row"><div class="field" style="flex:1"><label for="a-manual">Car
 var A=S.alertas;h+='<span class="label">Alertas</span><div class="card" style="padding-block:4px"><div class="setrow"><div class="grow"><span style="font-weight:700">Alertas activadas</span><span class="xs muted">Se muestran al abrir la app</span></div>'+sw('alOn',A.on,'Alertas activadas')+'</div><div class="setrow" style="flex-direction:column;align-items:stretch"><span class="small muted">Avisarme de los vencimientos</span><div class="seg" role="group"><button type="button" data-act="anticip" data-v="0" aria-pressed="'+(A.anticip===0)+'">El mismo día</button><button type="button" data-act="anticip" data-v="1" aria-pressed="'+(A.anticip===1)+'">1 día antes</button><button type="button" data-act="anticip" data-v="3" aria-pressed="'+(A.anticip===3)+'">3 días antes</button></div></div><div class="setrow"><div class="grow"><span style="font-weight:600">Un pago fijo subió más de 10%</span></div>'+sw('alAum',A.aumentos,'Alerta de aumentos')+'</div><div class="setrow"><div class="grow"><span style="font-weight:600">Recordarme si no cargo gastos</span><span class="xs muted">A partir de 3 días sin cargar</span></div>'+sw('alRec',A.recordatorio,'Recordatorio de carga')+'</div>'+(premium()?'<div class="setrow"><div class="grow"><span style="font-weight:600">Avisarme del presupuesto</span><span class="xs muted">Al 80% y cuando me paso</span></div>'+sw('alPresu',A.presu,'Alerta de presupuesto')+'</div>':'')+'</div><span class="xs muted">Para que te avise tu celular aunque no abras la app, en cada vencimiento tenés "Agregar a Google Calendar".</span>';
 h+='<span class="label">Instalarla en el celular</span><div class="card small" style="display:flex;flex-direction:column;gap:8px;color:var(--soft)"><span><b>iPhone:</b> en Safari tocá Compartir y elegí "Agregar a inicio".</span><span><b>Android:</b> en Chrome tocá el menú (⋮) y elegí "Instalar app" o "Agregar a la pantalla principal".</span><span class="xs muted">Instalada se abre como una app y tus datos quedan más protegidos.</span></div>';
 h+='<span class="label">Tus datos</span><div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row small" style="color:var(--soft)"><span style="color:var(--accent-ink)">'+ic('lock',18)+'</span><span>Todo se guarda solo en este celular. No se manda a ningún servidor.</span></div><span class="xs muted">'+S.movs.length+' movimientos · '+S.vencs.length+' vencimientos</span><button type="button" class="btn ghost" data-act="exportar">Descargar mis datos (CSV)</button><button type="button" class="btn ghost" data-act="copiarCsv">Copiar mis datos</button>'+(S.movs.length?'':'<button type="button" class="btn plain" data-act="demo">Cargar datos de ejemplo</button>')+'<button type="button" class="btn danger" data-act="borrarTodo">'+(confirmDel==='todo'?'Tocá de nuevo para borrar todo':'Borrar todos mis datos')+'</button></div>';
-h+='<p class="xs muted" style="text-align:center;margin:8px 0 0">FinanzApp '+(PLAN_TXT[S.lic.plan]||'')+' · prototipo v0.3</p>';
+h+='<p class="xs muted" style="text-align:center;margin:8px 0 0">FinanzApp '+(PLAN_TXT[S.lic.plan]||'')+' · prototipo v0.4</p>';
 return h+'</div>';}
 function cobroOpts(){var o='';for(var i=1;i<=28;i++)o+='<option value="'+i+'"'+(S.perfil.cobro===i?' selected':'')+'>El '+i+'</option>';o+='<option value="31"'+(S.perfil.cobro===31?' selected':'')+'>Último día del mes</option>';return o;}
 function swatches(){return '<div class="swatches" role="group" aria-label="Color">'+Object.keys(COLORES).map(function(k){return '<button type="button" class="swatch" data-act="color" data-v="'+k+'" aria-label="'+COLORES[k][2]+'" aria-pressed="'+(S.ui.color===k)+'" style="background:'+COLORES[k][0]+'"></button>';}).join('')+'</div>';}
@@ -435,7 +437,7 @@ function borrarDemo(){S.movs=S.movs.filter(function(m){return !m.demo;});S.vencs
 
 /* ---------- activación ---------- */
 var actCode='',actErr='',actBusy=false;
-function renderAct(){var h='<div class="wrap" style="padding-bottom:40px"><span class="serif" style="font-size:22px">Finanz<span style="color:var(--accent-ink)">App</span></span><div style="display:flex;flex-direction:column;gap:12px;margin-top:24px"><h1 style="font-size:32px">Activá tu FinanzApp</h1><p style="margin:0;color:var(--soft);font-size:16px;line-height:1.5">Ingresá el código que viene en tu caja. Si escaneaste el QR, ya está cargado.</p></div>';
+function renderAct(){var h='<div class="wrap" style="padding-bottom:40px"><span class="serif" style="font-size:22px">Finanz<span style="color:var(--accent-ink)">App</span></span><div style="display:flex;flex-direction:column;gap:12px;margin-top:24px"><h1 style="font-size:32px">Activá tu FinanzApp</h1><p style="margin:0;color:var(--soft);font-size:16px;line-height:1.5">Ingresá el código que viene en tu caja. Si escaneaste el QR, ya está cargado. Cada código se activa en un solo celular.</p></div>';
 h+='<div class="field"><label for="act-code">Código de activación</label><input class="input" id="act-code" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="FZB-XXXX-XXXX" value="'+esc(actCode)+'" style="font-family:ui-monospace,monospace;font-size:18px;letter-spacing:.08em;text-transform:uppercase"></div>';
 if(actErr)h+='<span class="err">'+esc(actErr)+'</span>';
 h+='<button type="button" class="btn" data-act="activar"'+(actBusy?' disabled':'')+'>'+(actBusy?'Verificando…':'Activar')+'</button>';
@@ -443,11 +445,11 @@ h+='<div class="card" style="display:flex;flex-direction:column;gap:12px">'+[['k
 $('onb').innerHTML=h;}
 function activar(code){code=String(code||'').trim();var up=!!S.lic.plan;if(!code){if(up)toast('Ingresá tu código Premium');else{actErr='Ingresá el código de tu caja.';renderAct();}return;}
 actCode=code;actErr='';actBusy=true;if(!up)renderAct();
-checkCode(code).then(function(r){actBusy=false;
-if(!r){var msg='Ese código no es válido. Revisá que esté completo (ej: FZB-7K2Q-M9XT).';if(up)toast(msg);else{actErr=msg;renderAct();}return;}
+api('activar',code).then(function(r){actBusy=false;
+if(!r||!r.ok){var msg=MOTIVO[r&&r.motivo]||'No pudimos verificar el código. Probá de nuevo en un rato.';if(up)toast(msg);else{actErr=msg;renderAct();}return;}
 if(S.lic.plan==='P'&&r.plan==='B'){toast('Ya tenés Premium');return;}
-var mejora=S.lic.plan==='B'&&r.plan==='P';S.lic={plan:r.plan,h:r.h,fecha:new Date().toISOString()};actCode='';save();render();toast(mejora?'¡Listo! Ya tenés Premium':'Plan '+PLAN_TXT[r.plan]+' activado');})
-.catch(function(){actBusy=false;var msg='Este navegador no puede verificar el código. Abrí el link en Chrome o Safari.';if(up)toast(msg);else{actErr=msg;renderAct();}});}
+var mejora=S.lic.plan==='B'&&r.plan==='P';S.lic={plan:r.plan,code:normCode(code),fecha:new Date().toISOString(),chk:Date.now()};actCode='';save();render();toast(mejora?'¡Listo! Ya tenés Premium':'Plan '+PLAN_TXT[r.plan]+' activado');})
+.catch(function(){actBusy=false;var msg='No pudimos conectarnos para verificar el código. Revisá tu conexión y probá de nuevo.';if(up)toast(msg);else{actErr=msg;renderAct();}});}
 
 /* ---------- onboarding ---------- */
 var onbStep=0;
@@ -525,8 +527,9 @@ var b=t.getAttribute('data-bind');if(b&&t.tagName==='INPUT'){setPath(b,t.value);
 document.addEventListener('change',function(e){var t=e.target,b=t.getAttribute('data-bind');if(!b)return;if(b==='perfil.cobro'){S.perfil.cobro=parseInt(t.value,10);save();if(S.onboarded)render();return;}if(t.tagName==='INPUT'){setPath(b,t.value);save();if(S.onboarded&&b==='perfil.nac')render();}});
 var qCode=null;try{qCode=new URLSearchParams(location.search).get('codigo');if(qCode&&history.replaceState)history.replaceState(null,'',location.pathname);}catch(e){}
 render();
-if(qCode&&S.lic.plan!=='P')activar(qCode);
-loadNovedades();if(!S.dolar.fecha||S.dolar.fuente==='auto'&&Date.now()-new Date(S.dolar.fecha).getTime()>3*3600000)fetchDolar(true);
+if(qCode&&S.lic.plan!=='P')activar(qCode);else verificarLic();
+loadNovedades();
+document.addEventListener('visibilitychange',function(){if(!document.hidden)verificarLic();});if(!S.dolar.fecha||S.dolar.fuente==='auto'&&Date.now()-new Date(S.dolar.fecha).getTime()>3*3600000)fetchDolar(true);
 })();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
 </script>
