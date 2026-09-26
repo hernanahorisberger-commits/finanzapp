@@ -448,12 +448,18 @@ if(J.p.length<10)h+='<button type="button" class="btn plain sm" data-act="jSumar
 h+='<span class="xs muted">Si alguien no puso nada, dejalo en 0.</span></div>';
 h+='<div id="j-res" style="display:flex;flex-direction:column;gap:8px">'+juntaRes()+'</div>';
 h+='<button type="button" class="btn" data-act="jCompartir">'+ic('chat',18)+'Compartir por WhatsApp</button>';
-h+='<button type="button" class="btn ghost" data-act="jMiParte">Sumar mi parte a mis gastos</button>';
+h+='<div id="j-parte" style="display:flex;flex-direction:column;gap:8px">'+juntaParte()+'</div>';
 h+='<button type="button" class="linkbtn" data-act="jNueva" style="align-self:center">Empezar una juntada nueva</button>';
 $('sheet').innerHTML=h;openSheet();}
+function juntaParte(){var J=S.junta,Rj=juntaCalc(J),mv=J.movId?S.movs.find(function(x){return x.id===J.movId;}):null;if(!mv){J.movId=null;J.preg=false;}
+if(J.preg&&mv)return '<div class="card" style="display:flex;flex-direction:column;gap:10px;border:1.5px solid var(--good)"><span style="font-weight:700">Listo, sumamos '+fmt(mv.monto,'ARS')+' a tus gastos.</span><span class="small muted">¿Finalizamos la juntada? Si la dejás abierta, tu parte no se vuelve a cargar.</span><button type="button" class="btn sm" data-act="jFin">Sí, finalizar</button><button type="button" class="btn plain sm" data-act="jSeguir">Seguir editando</button></div>';
+if(mv&&Math.round(Rj.cuota)===Math.round(mv.monto))return '<button type="button" class="btn ghost" disabled style="opacity:.7">'+ic('check',18)+'Tu parte ya está en tus gastos</button>';
+if(mv)return '<button type="button" class="btn ghost" data-act="jMiParte">Actualizar mi parte ('+fmt(Math.round(Rj.cuota),'ARS')+')</button>';
+return '<button type="button" class="btn ghost" data-act="jMiParte">Sumar mi parte a mis gastos</button>';}
 function juntaCompartir(){var R=juntaCalc(S.junta);if(!R.tot){toast('Primero cargá cuánto puso cada uno');return;}var txt=juntaTexto();if(navigator.share){navigator.share({text:txt}).catch(function(){});}else window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
-function juntaMiParte(){var J=S.junta,R=juntaCalc(J);if(!R.tot){toast('Primero cargá cuánto puso cada uno');return;}var monto=Math.round(R.cuota);var t=(J.titulo||'').trim()||'Juntada';var cat=sugerir(t)||'Comida afuera';
-S.movs.push({id:uid(),tipo:'gasto',fecha:iso(today()),monto:monto,moneda:'ARS',fx:rate(),cat:cat,nota:t,medio:'Efectivo',cuota:null,creado:Date.now()});save();closeSheet();render();toast('Sumamos '+fmt(monto,'ARS')+' a tus gastos ('+cat+')');}
+function juntaMiParte(){var J=S.junta,R=juntaCalc(J);if(!R.tot){toast('Primero cargá cuánto puso cada uno');return;}var monto=Math.round(R.cuota);var t=(J.titulo||'').trim()||'Juntada';var cat=sugerir(t)||'Comida afuera';var mv=J.movId?S.movs.find(function(x){return x.id===J.movId;}):null;
+if(mv){mv.monto=monto;mv.nota=t;J.preg=true;save();render();verJunta();var jp0=$('j-parte');if(jp0)jp0.scrollIntoView({block:'center'});return;}
+var id=uid();S.movs.push({id:id,tipo:'gasto',fecha:iso(today()),monto:monto,moneda:'ARS',fx:rate(),cat:cat,nota:t,medio:'Efectivo',cuota:null,creado:Date.now()});J.movId=id;J.preg=true;save();render();verJunta();var jp=$('j-parte');if(jp)jp.scrollIntoView({block:'center'});}
 
 /* ---------- mis ahorros ---------- */
 function segLoc(){return '<div class="seg" role="group" aria-label="Vista"><button type="button" data-act="locVista" data-v="locales" aria-pressed="'+(locVista!=='ahorros')+'">Locales</button><button type="button" data-act="locVista" data-v="ahorros" aria-pressed="'+(locVista==='ahorros')+'">Mis ahorros</button></div>';}
@@ -702,6 +708,8 @@ case 'junta':verJunta();break;
 case 'jSumar':if(S.junta.p.length<10){S.junta.p.push({n:'',m:''});save();verJunta();var ins=document.querySelectorAll('[data-j^="n:"]');if(ins.length)ins[ins.length-1].focus();}break;
 case 'jQuitar':if(S.junta.p.length>2){S.junta.p.splice(parseInt(v,10),1);save();verJunta();}break;
 case 'jNueva':S.junta=juntaNueva();save();verJunta();break;
+case 'jFin':S.junta=juntaNueva();save();closeSheet();toast('Juntada finalizada. Tu parte quedó en tus gastos.');break;
+case 'jSeguir':S.junta.preg=false;save();var jq=$('j-parte');if(jq)jq.innerHTML=juntaParte();break;
 case 'jCompartir':juntaCompartir();break;
 case 'jMiParte':juntaMiParte();break;
 case 'verAhorros':locVista='ahorros';if(S.locales&&S.locales.length)tab='locales';render();window.scrollTo(0,0);break;
@@ -754,7 +762,7 @@ case 'onbFin':S.onboarded=true;save();render();break;
 }});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.target.id==='act-code'||e.target.id==='up-code')){e.preventDefault();activar(e.target.value);return;}if((e.key==='Enter'||e.key===' ')&&e.target.matches('.alert[role="button"]')){e.preventDefault();e.target.click();}if(e.key==='Escape'&&!$('sheetWrap').hidden)closeSheet();});
 document.addEventListener('input',function(e){var t=e.target;if(t.id==='act-code'){actCode=t.value;return;}if(t.id==='c-monto'&&D){D.monto=t.value;D.err='';var c=$('c-conv');if(c)c.textContent=convHint();var ca=$('c-ahorro');if(ca)ca.textContent=ahorroHint();return;}
-var jk=t.getAttribute('data-j');if(jk&&S.junta){if(jk==='t')S.junta.titulo=t.value;else{var jp=jk.split(':');S.junta.p[+jp[1]][jp[0]]=t.value;}save();var jr=$('j-res');if(jr)jr.innerHTML=juntaRes();return;}
+var jk=t.getAttribute('data-j');if(jk&&S.junta){if(jk==='t')S.junta.titulo=t.value;else{var jp=jk.split(':');S.junta.p[+jp[1]][jp[0]]=t.value;}save();var jr=$('j-res');if(jr)jr.innerHTML=juntaRes();var jq2=$('j-parte');if(jq2&&!S.junta.preg)jq2.innerHTML=juntaParte();return;}
 if(t.id==='c-ahman'&&D){D.ahMan=t.value;var cb=$('c-ahorro');if(cb)cb.textContent=ahorroHint();return;}
 if(t.id==='c-nota'&&D){D.nota=t.value;if(D.tipo==='gasto'&&!D.catManual){var s=sugerir(D.nota);if(s!==D.cat){D.cat=s;$('c-cats').innerHTML=catsHtml(CATS_G);}$('c-sug').textContent=D.cat?'Sugerida por lo que escribiste':'';}else if(D.tipo==='ingreso'&&!D.catManual){var s2=sugerir(D.nota);if(s2==='Sueldo'&&D.cat!=='Sueldo'){D.cat='Sueldo';$('c-cats').innerHTML=catsHtml(CATS_I);}}return;}
 if(t.id==='c-fecha'&&D){D.fecha=t.value||iso(today());return;}
