@@ -1,0 +1,26 @@
+[
+  {
+    "id": "2026-09-bienvenida",
+    "fecha": "2026-09-26",
+    "titulo": "Bienvenido a FinanzApp Premium",
+    "texto": "Ya tenés presupuesto por categoría, registro de ahorro e inversión y la evolución de tus últimos 6 meses. Cada tanto vas a encontrar acá tips y novedades de la app."
+  },
+  {
+    "id": "2026-09-presupuesto",
+    "fecha": "2026-09-25",
+    "titulo": "Tu primer presupuesto, en 2 minutos",
+    "texto": "Si ya cargaste un mes de gastos, entrá a Presupuesto y tocá \"Sugerirme uno\". Arma los topes con lo que gastaste el período anterior. Después bajá un poco las categorías donde sentís que se te va la plata y dejá el resto igual. Un presupuesto que se cumple vale más que uno ideal."
+  },
+  {
+    "id": "2026-09-cuotas",
+    "fecha": "2026-09-24",
+    "titulo": "Cuotas: mirá el total comprometido",
+    "texto": "Cada compra en cuotas se come una parte de tus próximos sueldos. En Mi mes tenés \"Ya comprometido en cuotas\": antes de sumar otra compra en cuotas, fijate cuánto de los próximos 3 meses ya está tomado."
+  },
+  {
+    "id": "2026-09-emergencia",
+    "fecha": "2026-09-23",
+    "titulo": "Fondo de emergencia: el primer ahorro",
+    "texto": "Antes de pensar en invertir, conviene tener un colchón para imprevistos: una rotura, un mes sin ingresos extra, un gasto médico. Registralo en Ahorro con la categoría \"Fondo de emergencia\" y mirá cómo crece mes a mes."
+  }
+]

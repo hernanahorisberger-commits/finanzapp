@@ -1,5 +1,5 @@
 // FinanzApp service worker: la app abre sin conexión y toma las actualizaciones cuando hay red.
-var CACHE = 'finanzapp-v1';
+var CACHE = 'finanzapp-v2';
 var SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
@@ -18,6 +18,15 @@ self.addEventListener('fetch', function (e) {
   var url = new URL(req.url);
   // La cotización del dólar siempre va a la red.
   if (url.hostname === 'dolarapi.com') return;
+  // Novedades: siempre intenta traer la versión nueva.
+  if (url.pathname.slice(-15) === 'novedades.json') {
+    e.respondWith(fetch(req).then(function (res) {
+      var copy = res.clone();
+      caches.open(CACHE).then(function (c) { c.put(req, copy); });
+      return res;
+    }).catch(function () { return caches.match(req); }));
+    return;
+  }
   // Página: primero la red (para recibir versiones nuevas); sin conexión, la copia guardada.
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then(function (res) {
