@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23D4AF5A'/%3E%3Ctext x='90' y='124' font-family='Georgia,serif' font-size='110' font-weight='700' text-anchor='middle' fill='%2311100E'%3EF%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23D4AF5A'/%3E%3Ctext x='90' y='124' font-family='Georgia,serif' font-size='110' font-weight='700' text-anchor='middle' fill='%2311100E'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <title>FinanzApp</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -304,7 +305,7 @@ h+='<div class="row"><div class="field" style="flex:1"><label for="a-manual">Car
 var A=S.alertas;h+='<span class="label">Alertas</span><div class="card" style="padding-block:4px"><div class="setrow"><div class="grow"><span style="font-weight:700">Alertas activadas</span><span class="xs muted">Se muestran al abrir la app</span></div>'+sw('alOn',A.on,'Alertas activadas')+'</div><div class="setrow" style="flex-direction:column;align-items:stretch"><span class="small muted">Avisarme de los vencimientos</span><div class="seg" role="group"><button type="button" data-act="anticip" data-v="0" aria-pressed="'+(A.anticip===0)+'">El mismo día</button><button type="button" data-act="anticip" data-v="1" aria-pressed="'+(A.anticip===1)+'">1 día antes</button><button type="button" data-act="anticip" data-v="3" aria-pressed="'+(A.anticip===3)+'">3 días antes</button></div></div><div class="setrow"><div class="grow"><span style="font-weight:600">Un pago fijo subió más de 10%</span></div>'+sw('alAum',A.aumentos,'Alerta de aumentos')+'</div><div class="setrow"><div class="grow"><span style="font-weight:600">Recordarme si no cargo gastos</span><span class="xs muted">A partir de 3 días sin cargar</span></div>'+sw('alRec',A.recordatorio,'Recordatorio de carga')+'</div></div><span class="xs muted">Para que te avise tu celular aunque no abras la app, en cada vencimiento tenés "Agregar a Google Calendar".</span>';
 h+='<span class="label">Instalarla en el celular</span><div class="card small" style="display:flex;flex-direction:column;gap:8px;color:var(--soft)"><span><b>iPhone:</b> en Safari tocá Compartir y elegí "Agregar a inicio".</span><span><b>Android:</b> en Chrome tocá el menú (⋮) y elegí "Instalar app" o "Agregar a la pantalla principal".</span><span class="xs muted">Instalada se abre como una app y tus datos quedan más protegidos.</span></div>';
 h+='<span class="label">Tus datos</span><div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row small" style="color:var(--soft)"><span style="color:var(--accent-ink)">'+ic('lock',18)+'</span><span>Todo se guarda solo en este celular. No se manda a ningún servidor.</span></div><span class="xs muted">'+S.movs.length+' movimientos · '+S.vencs.length+' vencimientos</span><button type="button" class="btn ghost" data-act="exportar">Descargar mis datos (CSV)</button><button type="button" class="btn ghost" data-act="copiarCsv">Copiar mis datos</button>'+(S.movs.length?'':'<button type="button" class="btn plain" data-act="demo">Cargar datos de ejemplo</button>')+'<button type="button" class="btn danger" data-act="borrarTodo">'+(confirmDel==='todo'?'Tocá de nuevo para borrar todo':'Borrar todos mis datos')+'</button></div>';
-h+='<p class="xs muted" style="text-align:center;margin:8px 0 0">FinanzApp · prototipo v0.1</p>';
+h+='<p class="xs muted" style="text-align:center;margin:8px 0 0">FinanzApp · prototipo v0.2</p>';
 return h+'</div>';}
 function cobroOpts(){var o='';for(var i=1;i<=28;i++)o+='<option value="'+i+'"'+(S.perfil.cobro===i?' selected':'')+'>El '+i+'</option>';o+='<option value="31"'+(S.perfil.cobro===31?' selected':'')+'>Último día del mes</option>';return o;}
 function swatches(){return '<div class="swatches" role="group" aria-label="Color">'+Object.keys(COLORES).map(function(k){return '<button type="button" class="swatch" data-act="color" data-v="'+k+'" aria-label="'+COLORES[k][2]+'" aria-pressed="'+(S.ui.color===k)+'" style="background:'+COLORES[k][0]+'"></button>';}).join('')+'</div>';}
@@ -446,6 +447,7 @@ document.addEventListener('change',function(e){var t=e.target,b=t.getAttribute('
 render();
 if(!S.dolar.fecha||S.dolar.fuente==='auto'&&Date.now()-new Date(S.dolar.fecha).getTime()>3*3600000)fetchDolar(true);
 })();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
 </script>
 
 </body>
