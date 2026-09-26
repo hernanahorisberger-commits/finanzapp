@@ -113,6 +113,11 @@ nav.tabs button[aria-current="page"]{color:var(--accent-ink)}
 .demo{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1.5px dashed var(--accent);border-radius:14px;padding:10px 12px;font-size:13px}
 .linkbtn{background:none;border:0;color:var(--accent-ink);font-weight:700;font-size:13px;padding:8px 0;text-decoration:none}
 .err{color:var(--bad);font-size:13px}
+.jrow{display:grid;grid-template-columns:minmax(0,1fr) 120px 40px;gap:8px;align-items:center}
+.jrow .input{min-width:0}
+.jtr{display:flex;align-items:center;gap:8px;font-size:15px;line-height:1.35}
+.jtr b{font-weight:700}
+.sheet>*{flex-shrink:0}
 .redes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .redes a{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;text-decoration:none}
 .redes a svg{color:var(--accent-ink)}
@@ -212,6 +217,7 @@ pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path
 chat:'<path d="M4 20l1.4-4.2A8 8 0 1 1 8.2 18.6z"></path>',
 share:'<path d="M12 3v12M8 7l4-4 4 4"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path>',
 down:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path>',
+users:'<circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.5-3.6 3.2-6 6.5-6s6 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .8 3.3 2.9 3.5 5.7"></path>',
 ig:'<rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><path d="M17.5 6.5h.01" stroke-width="2.6"></path>',
 tt:'<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"></path><path d="M14 3c.5 2.6 2.4 4.4 5 4.6"></path>',
 fb:'<path d="M14 21v-8h3l.5-3.5H14V7.5c0-1 .4-1.8 1.9-1.8H18V2.6c-.4 0-1.6-.2-3-.2-3 0-4.6 1.8-4.6 5V9.5H7.5V13h2.9v8"></path>',
@@ -335,7 +341,7 @@ if(!storageOk)h+='<div class="alert bad"><div class="ai">'+ic('lock',18)+'</div>
 if(premium()){var am=ahorroMes();if(am>0)h+='<button type="button" class="card tight row" style="width:100%;text-align:left;border-color:var(--good)" data-act="verAhorros"><div class="ico" style="color:var(--good)">'+ic('store',20)+'</div><div class="grow"><span style="font-weight:700">Este mes ahorraste <span class="num" style="color:var(--good)">'+fmt(am)+'</span></span><span class="xs muted">Con descuentos de locales adheridos</span></div>'+ic('chevR',18)+'</button>';}
 if(S.demo)h+='<div class="demo"><span>Estás viendo <b>datos de ejemplo</b>.</span><button type="button" class="linkbtn" data-act="borrarDemo">Empezar con mis datos</button></div>';
 alertas().forEach(function(a){h+='<div class="alert '+a.k+'"'+(a.a?' data-act="'+(a.a==='venc'||a.a==='presu'||a.a==='ajustes'?'tab" data-tab="'+a.a:'nuevo')+'" role="button" tabindex="0"':'')+'><div class="ai">'+ic(a.i,18)+'</div><div class="grow"><span style="font-weight:700">'+a.t+'</span>'+(a.b?'<span class="small" style="color:var(--soft)">'+a.b+'</span>':'')+'</div></div>';});
-if(!S.movs.length){h+='<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="serif" style="font-size:22px">Cargá tu primer gasto</span><span class="small muted">Monto, en qué y listo. La categoría te la sugerimos nosotros.</span><button type="button" class="btn" data-act="nuevo">'+ic('plus')+'Cargar gasto</button><button type="button" class="btn plain" data-act="demo">Probar con datos de ejemplo</button></div>';return h+'</div>';}
+if(!S.movs.length){h+='<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="serif" style="font-size:22px">Cargá tu primer gasto</span><span class="small muted">Monto, en qué y listo. La categoría te la sugerimos nosotros.</span><button type="button" class="btn" data-act="nuevo">'+ic('plus')+'Cargar gasto</button><button type="button" class="btn plain" data-act="demo">Probar con datos de ejemplo</button></div>'+juntaCard();return h+'</div>';}
 var pctUsed=ti?Math.min(100,tg/ti*100):0;
 h+='<section class="card" style="display:flex;flex-direction:column;gap:12px"><span class="small muted">Gastaste en '+perLabel(p)+'</span><span class="serif num" style="font-size:42px;line-height:1">'+fmt(tg)+'</span>';
 var ta=sum(ahorros(p).filter(function(m){return parse(m.fecha)<=t;}));var libre=ti-tg-ta;
@@ -345,6 +351,7 @@ h+='</section>';
 var vs=S.vencs.filter(function(v){return !paidThis(v);}).sort(function(a,b){return nextDue(a)-nextDue(b);});
 if(vs.length){var v=vs[0],d=nextDue(v),dt=dueTxt(v);h+='<button type="button" class="card tight row" style="width:100%;text-align:left" data-act="tab" data-tab="venc"><div class="ico" style="background:var(--accent-bg)">'+ic('cal',20)+'</div><div class="grow"><span style="font-weight:700">'+esc(v.nombre)+'</span><span class="small muted">Vence el '+d.getDate()+'/'+pad(d.getMonth()+1)+' · '+dt[0].toLowerCase()+'</span></div><span class="serif num" style="font-size:17px">'+(v.monto?(v.aprox?'~ ':'')+fmt(v.monto,'ARS'):'')+'</span></button>';}
 if(premium()&&NOV.length){var nv=NOV[0],nuevas=NOV.filter(function(x){return S.novVistas.indexOf(x.id)<0;}).length;h+='<button type="button" class="card tight row" style="width:100%;text-align:left" data-act="novedades"><div class="ico" style="background:var(--accent-bg)">'+ic('news',20)+'</div><div class="grow"><span class="ellip" style="font-weight:700">'+esc(nv.titulo)+'</span><span class="xs muted">Novedades'+(nuevas?' · '+nuevas+(nuevas===1?' nueva':' nuevas'):'')+'</span></div>'+(nuevas?'<span class="pill">NUEVO</span>':ic('chevR',18))+'</button>';}
+h+=juntaCard();
 var rec=S.movs.filter(function(m){return parse(m.fecha)<=t;}).sort(function(a,b){return a.fecha<b.fecha?1:a.fecha>b.fecha?-1:(b.creado||0)-(a.creado||0);}).slice(0,6);
 h+='<div style="display:flex;flex-direction:column;gap:2px"><div class="between"><h2>Últimos movimientos</h2><button type="button" class="linkbtn" data-act="tab" data-tab="mes">Ver todo</button></div><div class="list">'+rec.map(movRow).join('')+'</div></div>';
 return h+'</div>';}
@@ -421,6 +428,32 @@ h+='<p class="small muted" style="margin:0;text-align:center">Para el comercio: 
 var P=$('pase');P.innerHTML=h;P.hidden=false;document.body.style.overflow='hidden';tickPase();clearInterval(paseTimer);paseTimer=setInterval(tickPase,1000);}
 function tickPase(){var r=$('p-reloj');if(!r){clearInterval(paseTimer);return;}var n=new Date();r.textContent=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());var q=Math.max(0,paseFin-Date.now());$('p-resta').textContent='El pase vence en '+Math.floor(q/60000)+':'+pad(Math.floor(q/1000)%60);if(q<=0)cerrarPase();}
 function cerrarPase(){clearInterval(paseTimer);var P=$('pase');P.hidden=true;P.innerHTML='';document.body.style.overflow='';}
+
+/* ---------- dividir juntada ---------- */
+function juntaCard(){return '<button type="button" class="card tight row" style="width:100%;text-align:left" data-act="junta"><div class="ico" style="background:var(--accent-bg);color:var(--accent-ink)">'+ic('users',20)+'</div><div class="grow"><span style="font-weight:700">Dividir una juntada</span><span class="xs muted">Quién puso cuánto y quién le pasa a quién</span></div>'+ic('chevR',18)+'</button>';}
+function juntaNueva(){return {titulo:'',p:[{n:S.perfil.nombre||'Yo',m:''},{n:'',m:''},{n:'',m:''}],yo:0};}
+function juntaCalc(J){var P=J.p.map(function(x,i){return {i:i,n:String(x.n||'').trim()||('Persona '+(i+1)),m:parseMonto(x.m)};});var tot=P.reduce(function(a,x){return a+x.m;},0);var n=P.length;var cuota=n?tot/n:0;
+var D=P.map(function(x){return {n:x.n,b:Math.round((x.m-cuota)*100)};});var deu=D.filter(function(x){return x.b<0;}).map(function(x){return {n:x.n,v:-x.b};}).sort(function(a,b){return b.v-a.v;});var acr=D.filter(function(x){return x.b>0;}).map(function(x){return {n:x.n,v:x.b};}).sort(function(a,b){return b.v-a.v;});
+var T=[],i=0,j=0;while(i<deu.length&&j<acr.length){var v=Math.min(deu[i].v,acr[j].v);if(v>=100)T.push({de:deu[i].n,a:acr[j].n,v:Math.round(v/100)});deu[i].v-=v;acr[j].v-=v;if(deu[i].v<1)i++;if(acr[j].v<1)j++;}
+return {tot:tot,cuota:cuota,n:n,T:T};}
+function juntaRes(){var J=S.junta,R=juntaCalc(J);if(!R.tot)return '<span class="small muted" style="text-align:center">Cargá cuánto puso cada uno y te decimos quién le pasa a quién.</span>';
+var h='<div class="card" style="display:flex;flex-direction:column;gap:12px;border:1.5px solid var(--accent)"><div class="between"><span class="small muted">Total</span><span class="num" style="font-weight:700">'+fmt(R.tot,'ARS')+'</span></div><div class="between"><span class="small muted">A cada uno le toca</span><span class="serif num" style="font-size:26px;color:var(--accent-ink)">'+fmt(R.cuota,'ARS')+'</span></div><div style="height:1px;background:var(--line)"></div>';
+h+=R.T.length?R.T.map(function(t){return '<div class="jtr"><b>'+esc(t.de)+'</b><span class="muted">le pasa</span><b class="num" style="color:var(--accent-ink)">'+fmt(t.v,'ARS')+'</b><span class="muted">a</span><b>'+esc(t.a)+'</b></div>';}).join(''):'<span class="small" style="color:var(--good);font-weight:700">¡Están todos a mano! Nadie le debe nada a nadie.</span>';
+return h+'</div>';}
+function juntaTexto(){var J=S.junta,R=juntaCalc(J);var L=[(J.titulo?J.titulo.trim():'Juntada')+': total '+fmt(R.tot,'ARS')+', '+fmt(R.cuota,'ARS')+' cada uno.',''];R.T.forEach(function(t){L.push('• '+t.de+' le pasa '+fmt(t.v,'ARS')+' a '+t.a);});if(!R.T.length)L.push('Estamos todos a mano.');L.push('','Calculado con FinanzApp, gratis: '+appUrl());return L.join('\n');}
+function verJunta(){if(!S.junta)S.junta=juntaNueva();var J=S.junta;var h='<div class="between"><h1 style="font-size:22px">Dividir una juntada</h1><button type="button" class="iconbtn" data-act="cerrar" aria-label="Cerrar">'+ic('x',18)+'</button></div>';
+h+='<div class="field"><label for="j-tit">¿Qué juntada?</label><input id="j-tit" class="input" data-j="t" placeholder="Ej: Asado del sábado" value="'+esc(J.titulo)+'" autocomplete="off"></div>';
+h+='<div style="display:flex;flex-direction:column;gap:8px"><div class="jrow xs muted"><span>Nombre</span><span>Cuánto puso</span><span></span></div>'+J.p.map(function(x,i){return '<div class="jrow"><input class="input" data-j="n:'+i+'" placeholder="Persona '+(i+1)+'" value="'+esc(x.n)+'" autocomplete="off" aria-label="Nombre persona '+(i+1)+'"><input class="input num" data-j="m:'+i+'" inputmode="decimal" placeholder="$ 0" value="'+esc(x.m)+'" autocomplete="off" aria-label="Cuánto puso persona '+(i+1)+'"><button type="button" class="iconbtn" data-act="jQuitar" data-v="'+i+'" aria-label="Quitar"'+(J.p.length<=2?' disabled style="opacity:.3"':'')+'>'+ic('x',16)+'</button></div>';}).join('');
+if(J.p.length<10)h+='<button type="button" class="btn plain sm" data-act="jSumar">'+ic('plus',16)+'Agregar persona</button>';else h+='<span class="xs muted">Máximo 10 personas.</span>';
+h+='<span class="xs muted">Si alguien no puso nada, dejalo en 0.</span></div>';
+h+='<div id="j-res" style="display:flex;flex-direction:column;gap:8px">'+juntaRes()+'</div>';
+h+='<button type="button" class="btn" data-act="jCompartir">'+ic('chat',18)+'Compartir por WhatsApp</button>';
+h+='<button type="button" class="btn ghost" data-act="jMiParte">Sumar mi parte a mis gastos</button>';
+h+='<button type="button" class="linkbtn" data-act="jNueva" style="align-self:center">Empezar una juntada nueva</button>';
+$('sheet').innerHTML=h;openSheet();}
+function juntaCompartir(){var R=juntaCalc(S.junta);if(!R.tot){toast('Primero cargá cuánto puso cada uno');return;}var txt=juntaTexto();if(navigator.share){navigator.share({text:txt}).catch(function(){});}else window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+function juntaMiParte(){var J=S.junta,R=juntaCalc(J);if(!R.tot){toast('Primero cargá cuánto puso cada uno');return;}var monto=Math.round(R.cuota);var t=(J.titulo||'').trim()||'Juntada';var cat=sugerir(t)||'Comida afuera';
+S.movs.push({id:uid(),tipo:'gasto',fecha:iso(today()),monto:monto,moneda:'ARS',fx:rate(),cat:cat,nota:t,medio:'Efectivo',cuota:null,creado:Date.now()});save();closeSheet();render();toast('Sumamos '+fmt(monto,'ARS')+' a tus gastos ('+cat+')');}
 
 /* ---------- mis ahorros ---------- */
 function segLoc(){return '<div class="seg" role="group" aria-label="Vista"><button type="button" data-act="locVista" data-v="locales" aria-pressed="'+(locVista!=='ahorros')+'">Locales</button><button type="button" data-act="locVista" data-v="ahorros" aria-pressed="'+(locVista==='ahorros')+'">Mis ahorros</button></div>';}
@@ -665,6 +698,12 @@ case 'usarDesc':usarDesc(id,el);break;
 case 'cerrarPase':cerrarPase();break;
 case 'paseCargar':var pl=paseLocal;cerrarPase();nuevo('gasto');if(pl)elegirDto(pl);break;
 case 'cDto':elegirDto(v);break;
+case 'junta':verJunta();break;
+case 'jSumar':if(S.junta.p.length<10){S.junta.p.push({n:'',m:''});save();verJunta();var ins=document.querySelectorAll('[data-j^="n:"]');if(ins.length)ins[ins.length-1].focus();}break;
+case 'jQuitar':if(S.junta.p.length>2){S.junta.p.splice(parseInt(v,10),1);save();verJunta();}break;
+case 'jNueva':S.junta=juntaNueva();save();verJunta();break;
+case 'jCompartir':juntaCompartir();break;
+case 'jMiParte':juntaMiParte();break;
 case 'verAhorros':locVista='ahorros';if(S.locales&&S.locales.length)tab='locales';render();window.scrollTo(0,0);break;
 case 'locVista':locVista=v;render();break;
 case 'ahPer':ahPer=v;render();break;
@@ -715,6 +754,7 @@ case 'onbFin':S.onboarded=true;save();render();break;
 }});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.target.id==='act-code'||e.target.id==='up-code')){e.preventDefault();activar(e.target.value);return;}if((e.key==='Enter'||e.key===' ')&&e.target.matches('.alert[role="button"]')){e.preventDefault();e.target.click();}if(e.key==='Escape'&&!$('sheetWrap').hidden)closeSheet();});
 document.addEventListener('input',function(e){var t=e.target;if(t.id==='act-code'){actCode=t.value;return;}if(t.id==='c-monto'&&D){D.monto=t.value;D.err='';var c=$('c-conv');if(c)c.textContent=convHint();var ca=$('c-ahorro');if(ca)ca.textContent=ahorroHint();return;}
+var jk=t.getAttribute('data-j');if(jk&&S.junta){if(jk==='t')S.junta.titulo=t.value;else{var jp=jk.split(':');S.junta.p[+jp[1]][jp[0]]=t.value;}save();var jr=$('j-res');if(jr)jr.innerHTML=juntaRes();return;}
 if(t.id==='c-ahman'&&D){D.ahMan=t.value;var cb=$('c-ahorro');if(cb)cb.textContent=ahorroHint();return;}
 if(t.id==='c-nota'&&D){D.nota=t.value;if(D.tipo==='gasto'&&!D.catManual){var s=sugerir(D.nota);if(s!==D.cat){D.cat=s;$('c-cats').innerHTML=catsHtml(CATS_G);}$('c-sug').textContent=D.cat?'Sugerida por lo que escribiste':'';}else if(D.tipo==='ingreso'&&!D.catManual){var s2=sugerir(D.nota);if(s2==='Sueldo'&&D.cat!=='Sueldo'){D.cat='Sueldo';$('c-cats').innerHTML=catsHtml(CATS_I);}}return;}
 if(t.id==='c-fecha'&&D){D.fecha=t.value||iso(today());return;}
