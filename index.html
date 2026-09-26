@@ -113,6 +113,9 @@ nav.tabs button[aria-current="page"]{color:var(--accent-ink)}
 .demo{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1.5px dashed var(--accent);border-radius:14px;padding:10px 12px;font-size:13px}
 .linkbtn{background:none;border:0;color:var(--accent-ink);font-weight:700;font-size:13px;padding:8px 0;text-decoration:none}
 .err{color:var(--bad);font-size:13px}
+.redes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.redes a{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;text-decoration:none}
+.redes a svg{color:var(--accent-ink)}
 .inst{border:1.5px solid var(--accent);background:var(--accent-bg);display:flex;flex-direction:column;gap:12px}
 .puerta{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto}
 .puerta[hidden]{display:none}
@@ -208,7 +211,11 @@ store:'<path d="M4 10v10h16V10M3 10l2-6h14l2 6M3 10c0 1.7 1.3 3 3 3s3-1.3 3-3c0 
 pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle>',
 chat:'<path d="M4 20l1.4-4.2A8 8 0 1 1 8.2 18.6z"></path>',
 share:'<path d="M12 3v12M8 7l4-4 4 4"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path>',
-down:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path>'
+down:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path>',
+ig:'<rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><path d="M17.5 6.5h.01" stroke-width="2.6"></path>',
+tt:'<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"></path><path d="M14 3c.5 2.6 2.4 4.4 5 4.6"></path>',
+fb:'<path d="M14 21v-8h3l.5-3.5H14V7.5c0-1 .4-1.8 1.9-1.8H18V2.6c-.4 0-1.6-.2-3-.2-3 0-4.6 1.8-4.6 5V9.5H7.5V13h2.9v8"></path>',
+web:'<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"></path>'
 };
 function ic(n,s){s=s||20;return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[n]||'')+'</svg>';}
 var CAT_IC={'Supermercado':'cart','Comida afuera':'coffee','Transporte':'fuel','Hogar y alquiler':'home','Servicios':'bolt','Salud':'heart','Ropa':'shirt','Ocio':'star','Educación':'book','Otros':'dots','Sueldo':'cash','Extra':'cash','Otros ingresos':'cash','Plazo fijo':'lock','Fondos (FCI)':'up','Dólares':'cash','Cripto':'spark','Acciones y CEDEARs':'chart','Fondo de emergencia':'piggy','Otros ahorros':'piggy'};
@@ -377,6 +384,8 @@ for(var j=0;j<hoy.length;j++){if(hoy[j][0]>min)return {abierto:false,txt:'Cerrad
 for(var d=1;d<=7;d++){var k=DIA_K[(dow+d)%7],r=rangos(h[k]);if(r.length)return {abierto:false,txt:'Cerrado · abre '+(d===1?'mañana':DIA_N[k])+' '+fh(r[0][0])};}
 return {abierto:false,txt:'Cerrado'};}
 function mapsUrl(l){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((l.nombre?l.nombre+', ':'')+(l.direccion||''));}
+function redUrl(k,v){v=String(v||'').trim();if(!v)return '';if(/^https?:\/\//i.test(v))return v;if(/^(www\.|[a-z0-9-]+\.[a-z]{2,})/i.test(v)&&k!=='ig'&&k!=='tt')return 'https://'+v;var u=v.replace(/^@/,'').replace(/^(instagram|tiktok|facebook)\.com\/@?/i,'').replace(/\s+/g,'');if(!u)return '';if(k==='ig')return 'https://instagram.com/'+u;if(k==='tt')return 'https://www.tiktok.com/@'+u;if(k==='fb')return 'https://facebook.com/'+u;return 'https://'+u;}
+function redesHtml(r){r=r||{};var L=[['ig','Instagram'],['tt','TikTok'],['fb','Facebook'],['web','Web']];var h='';L.forEach(function(x){var u=redUrl(x[0],r[x[0]]);if(u)h+='<a href="'+esc(u)+'" target="_blank" rel="noopener">'+ic(x[0],16)+x[1]+'</a>';});return h?'<div class="redes">'+h+'</div>':'';}
 function waUrl(n){n=String(n||'').replace(/\D/g,'');if(!n)return '';if(n.indexOf('54')!==0)n='549'+n.replace(/^0/,'').replace(/^(\d{2,4})15/,'$1');return 'https://wa.me/'+n;}
 function vLocales(){var L=(S.locales||[]).slice();var rubros=[];L.forEach(function(l){if(l.rubro&&rubros.indexOf(l.rubro)<0)rubros.push(l.rubro);});if(locFiltro&&rubros.indexOf(locFiltro)<0)locFiltro='';
 var h='<div class="wrap"><div style="display:flex;flex-direction:column;gap:4px"><h1>Locales adheridos</h1><span class="small muted">'+(premium()?'Tocá un local y mostrá tu pase en caja para usar el descuento.':'Mirá los descuentos. Con Premium los podés usar mostrando tu pase en caja.')+'</span></div>';
@@ -392,7 +401,7 @@ h+='<div class="card" style="display:flex;flex-direction:column;gap:8px;backgrou
 h+=premium()?'<button type="button" class="btn" data-act="usarDesc" data-id="'+esc(l.id)+'">'+ic('key',18)+'Usar descuento</button><span class="xs muted" style="text-align:center;margin-top:-8px">Mostrá el pase en caja antes de pagar.</span>':'<button type="button" class="btn ghost" data-act="tab" data-tab="ajustes">'+ic('lock',18)+'Pasate a Premium para usarlo</button>';
 if(e||DIA_K.some(function(k){return String(hh[k]||'').trim();}))h+='<div class="card" style="display:flex;flex-direction:column;gap:10px">'+(e?'<span style="font-weight:700;color:'+(e.abierto?'var(--good)':'var(--muted)')+'"><span class="dot" style="background:'+(e.abierto?'var(--good)':'var(--line)')+'"></span>'+e.txt+'</span>':'')+'<div class="hor">'+['lun','mar','mie','jue','vie','sab','dom'].map(function(k){var t=String(hh[k]||'').trim()||'—';return '<span class="muted'+(k===hd?' hoy':'')+'">'+DIA_L[k]+'</span><span class="'+(k===hd?'hoy':'muted')+'">'+esc(t)+'</span>';}).join('')+'</div></div>';
 if(l.direccion)h+='<a class="btn ghost" href="'+mapsUrl(l)+'" target="_blank" rel="noopener">'+ic('pin',18)+'Cómo llegar</a><span class="xs muted" style="text-align:center;margin-top:-8px">'+esc(l.direccion)+'</span>';
-var w=waUrl(l.whatsapp);if(w)h+='<a class="btn plain" href="'+w+'" target="_blank" rel="noopener">'+ic('chat',16)+'Escribir por WhatsApp</a>';
+var w=waUrl(l.whatsapp);if(w)h+='<a class="btn plain" href="'+w+'" target="_blank" rel="noopener">'+ic('chat',16)+'Escribir por WhatsApp</a>';h+=redesHtml(l.redes);
 h+='<a class="linkbtn" style="text-align:center" href="'+mapsUrl(l)+'" target="_blank" rel="noopener">Ver reseñas en Google Maps</a>';
 $('sheet').innerHTML=h;openSheet();}
 var paseTimer=null,paseFin=0;
