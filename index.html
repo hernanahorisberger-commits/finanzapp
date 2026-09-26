@@ -114,6 +114,13 @@ nav.tabs button[aria-current="page"]{color:var(--accent-ink)}
 .linkbtn{background:none;border:0;color:var(--accent-ink);font-weight:700;font-size:13px;padding:8px 0;text-decoration:none}
 .err{color:var(--bad);font-size:13px}
 .inst{border:1.5px solid var(--accent);background:var(--accent-bg);display:flex;flex-direction:column;gap:12px}
+.puerta{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto}
+.puerta[hidden]{display:none}
+.puerta .in{max-width:420px;margin:0 auto;min-height:100%;box-sizing:border-box;padding:56px 24px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;justify-content:center}
+.puerta .appico{width:96px;height:96px;border-radius:24px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.puerta ol{text-align:left;align-self:stretch;margin:0;padding:16px 16px 16px 36px;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.45;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.puerta .kbd{display:inline-flex;vertical-align:-4px;color:var(--accent-ink)}
+.puerta .btn[disabled]{opacity:.6}
 .inst ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.45}
 .inst .kbd{display:inline-flex;vertical-align:-4px;color:var(--accent-ink)}
 .loc{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
@@ -143,6 +150,7 @@ nav.tabs button[aria-current="page"]{color:var(--accent-ink)}
 <div class="sheetwrap" id="sheetWrap" hidden><div class="scrim" data-act="cerrar"></div><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div class="onb" id="onb" hidden></div>
 <div class="pase" id="pase" hidden></div>
+<div class="puerta" id="puerta" hidden></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <input type="file" id="restoreInput" accept="application/json,.json" hidden>
 
@@ -309,12 +317,11 @@ $('app').innerHTML=h;
 var T=[['inicio','home','Inicio'],['mes','chart','Mi mes'],['presu','pie','Presup.'],['venc','cal','Venc.'],['ajustes','sliders','Ajustes']];if(S.locales&&S.locales.length)T.splice(4,0,['locales','store','Locales']);if(tab==='locales'&&!(S.locales&&S.locales.length))tab='inicio';
 $('tabsIn').innerHTML=T.map(function(x){return '<button type="button" data-act="tab" data-tab="'+x[0]+'"'+(tab===x[0]?' aria-current="page"':'')+'>'+ic(x[1],22)+x[2]+'</button>';}).join('');
 $('fab').hidden=!(tab==='inicio'||tab==='mes');$('fabBtn').innerHTML=ic('plus',20)+'Cargar gasto';
-$('onb').hidden=S.onboarded;if(!S.onboarded)renderOnb();}
+$('onb').hidden=S.onboarded;if(!S.onboarded)renderOnb();renderPuerta();}
 
 function vInicio(){var t=today(),p=periodo(0);var g=gastos(p).filter(function(m){return parse(m.fecha)<=t;});var gi=ingresos(p);var tg=sum(g),ti=sum(gi);var h='<div class="wrap">';
 h+='<div class="between"><div style="display:flex;flex-direction:column;gap:2px"><span class="small muted">'+cap(DIAS[t.getDay()])+' '+t.getDate()+' de '+MES[t.getMonth()]+'</span><span class="serif" style="font-size:26px">Hola'+(S.perfil.nombre?', '+esc(S.perfil.nombre):'')+'</span></div>'+curToggle()+'</div>';
 if(!storageOk)h+='<div class="alert bad"><div class="ai">'+ic('lock',18)+'</div><div class="grow"><b>Este navegador no está guardando datos</b><span class="small muted">Abrila desde el ícono en tu pantalla de inicio o desde otro navegador.</span></div></div>';
-h+=instalBox('inicio');
 if(S.demo)h+='<div class="demo"><span>Estás viendo <b>datos de ejemplo</b>.</span><button type="button" class="linkbtn" data-act="borrarDemo">Empezar con mis datos</button></div>';
 alertas().forEach(function(a){h+='<div class="alert '+a.k+'"'+(a.a?' data-act="'+(a.a==='venc'||a.a==='presu'||a.a==='ajustes'?'tab" data-tab="'+a.a:'nuevo')+'" role="button" tabindex="0"':'')+'><div class="ai">'+ic(a.i,18)+'</div><div class="grow"><span style="font-weight:700">'+a.t+'</span>'+(a.b?'<span class="small" style="color:var(--soft)">'+a.b+'</span>':'')+'</div></div>';});
 if(!S.movs.length){h+='<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="serif" style="font-size:22px">Cargá tu primer gasto</span><span class="small muted">Monto, en qué y listo. La categoría te la sugerimos nosotros.</span><button type="button" class="btn" data-act="nuevo">'+ic('plus')+'Cargar gasto</button><button type="button" class="btn plain" data-act="demo">Probar con datos de ejemplo</button></div>';return h+'</div>';}
@@ -554,17 +561,21 @@ var mejora=r.plan==='P'&&S.lic.plan!=='P';S.lic={plan:r.plan,code:normCode(code)
 var instOk=false,instEv=null,UA=navigator.userAgent||'';
 var esAndroid=/Android/i.test(UA),esIOS=/iPhone|iPad|iPod/i.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 var inApp=/FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|MicroMessenger|TikTok|musical_ly|Snapchat/i.test(UA);
+var samsung=/SamsungBrowser/i.test(UA);
+var chromeReal=esAndroid&&/Chrome\/\d/.test(UA)&&!samsung&&!inApp&&!/EdgA|OPR|Firefox|YaBrowser|MiuiBrowser|HuaweiBrowser|UCBrowser|Brave|DuckDuckGo/i.test(UA);
+var instEspera=true,puertaNo=false;setTimeout(function(){instEspera=false;refrescarInst();},3500);
 var iosSafari=esIOS&&!inApp&&!/CriOS|FxiOS|EdgiOS|OPiOS/i.test(UA);
 function appUrl(){return location.origin+location.pathname;}
 function instalada(){try{return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){return false;}}
 function chromeIntent(){return 'intent://'+location.host+location.pathname+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(appUrl())+';end';}
-function refrescarInst(){var n=document.querySelectorAll('[data-inst]');for(var i=0;i<n.length;i++)n[i].outerHTML=instalBox(n[i].getAttribute('data-inst'));}
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;refrescarInst();});
+function refrescarInst(){renderPuerta();var n=document.querySelectorAll('[data-inst]');for(var i=0;i<n.length;i++)n[i].outerHTML=instalBox(n[i].getAttribute('data-inst'));}
+window.addEventListener('beforeinstallprompt',function(e){if(samsung)return;e.preventDefault();instEv=e;refrescarInst();});
 window.addEventListener('appinstalled',function(){instEv=null;instOk=true;refrescarInst();toast('¡Listo! Ya la tenés en tu pantalla de inicio');});
 function instalBox(donde){if(instOk||instalada())return '';if(donde==='inicio'&&S.ui.instNo)return '';
 var body='',tit='Instalá FinanzApp en tu celular';
 if(instEv){body='<span class="small" style="color:var(--soft)">Queda como una app más, con su ícono, y abre sin conexión.</span><button type="button" class="btn" data-act="instalar">'+ic('down',20)+'Instalar app</button>';}
-else if(esAndroid){body='<span class="small" style="color:var(--soft)">Para instalarla tiene que estar abierta en Chrome.</span><a class="btn" href="'+chromeIntent()+'">Abrir en Chrome</a><span class="xs muted">¿Ya estás en Chrome? Tocá los tres puntitos de arriba a la derecha y elegí <b>Instalar app</b> o <b>Agregar a la pantalla principal</b>.</span>';}
+else if(chromeReal){body='<span class="small" style="color:var(--soft)">Tocá los tres puntitos de arriba a la derecha y elegí <b>Instalar app</b>.</span>';}
+else if(esAndroid){body='<span class="small" style="color:var(--soft)">Se instala desde Chrome, en un toque.</span><a class="btn" href="'+chromeIntent()+'">Abrir en Chrome</a>';}
 else if(iosSafari){body='<ol><li>Tocá <span class="kbd">'+ic('share',18)+'</span> <b>Compartir</b>, en la barra de Safari.</li><li>Bajá y elegí <b>Agregar a inicio</b>.</li><li>Abrila desde el ícono nuevo.</li></ol>';}
 else if(esIOS&&!inApp){body='<ol><li>Tocá <span class="kbd">'+ic('share',18)+'</span> <b>Compartir</b>, arriba a la derecha.</li><li>Elegí <b>Agregar a inicio</b>.</li></ol><span class="xs muted">Si no te aparece, abrila en Safari.</span>';}
 else if(esIOS){tit='Abrila en Safari para instalarla';body='<span class="small" style="color:var(--soft)">Desde esta pantalla no se puede instalar. Tocá los tres puntitos (••• o ⋯) y elegí <b>Abrir en Safari</b>, o copiá el link y pegalo en Safari.</span><button type="button" class="btn plain" data-act="copiarLink">Copiar link</button>';}
@@ -573,10 +584,21 @@ if(esIOS&&!instalada())body+='<span class="xs muted">Instalala antes de cargar t
 if(donde==='inicio')body+='<button type="button" class="linkbtn" data-act="instNo" style="align-self:flex-start">Ahora no</button>';
 return '<div class="card inst" data-inst="'+donde+'"><div class="row"><span style="color:var(--accent-ink)">'+ic('down',22)+'</span><b style="font-size:16px">'+tit+'</b></div>'+body+'</div>';}
 
+function renderPuerta(){var el=$('puerta');if(!el)return;var ver=(esAndroid||esIOS)&&!instOk&&!instalada()&&!puertaNo&&!S.ui.puertaNo;el.hidden=!ver;if(!ver)return;
+var b='',nota='';
+if(instEv){b='<button type="button" class="btn" data-act="instalar">'+ic('down',20)+'Instalar gratis</button>';nota='Se instala desde Google Play, como cualquier app.';}
+else if(chromeReal&&instEspera){b='<button type="button" class="btn" disabled>Preparando instalación…</button>';}
+else if(chromeReal){b='<ol><li>Tocá los tres puntitos <b>⋮</b> de arriba a la derecha.</li><li>Elegí <b>Instalar app</b>.</li></ol>';}
+else if(esAndroid){b='<a class="btn" href="'+chromeIntent()+'">'+ic('down',20)+'Instalar con Chrome</a>';nota='Tu celular la abrió en otro navegador. Desde Chrome se instala en un toque, desde Google Play.';}
+else if(iosSafari){b='<ol><li>Tocá <span class="kbd">'+ic('share',20)+'</span> <b>Compartir</b>, en la barra de abajo.</li><li>Elegí <b>Agregar a inicio</b>.</li><li>Abrila desde el ícono nuevo.</li></ol>';}
+else if(esIOS&&!inApp){b='<ol><li>Tocá <span class="kbd">'+ic('share',20)+'</span> <b>Compartir</b>, arriba a la derecha.</li><li>Elegí <b>Agregar a inicio</b>.</li></ol>';nota='Si no te aparece, abrila en Safari.';}
+else{b='<button type="button" class="btn" data-act="copiarLink">Copiar link</button>';nota='Desde acá no se puede instalar. Tocá los tres puntitos, elegí <b>Abrir en Safari</b> o pegá el link en Safari.';}
+el.innerHTML='<div class="in"><img class="appico" src="icon-192.png" alt="" width="96" height="96"><div style="display:flex;flex-direction:column;gap:6px"><span class="serif" style="font-size:30px">Finanz<span style="color:var(--accent-ink)">App</span></span><span style="color:var(--soft);font-size:16px">Tus gastos, cargados en 10 segundos</span><span class="xs muted">Gratis · Sin publicidad · Hecha por Head &amp; Hands</span></div><div style="align-self:stretch;display:flex;flex-direction:column;gap:10px;margin-top:12px">'+b+(nota?'<span class="xs muted">'+nota+'</span>':'')+'</div><div style="display:flex;flex-direction:column;gap:6px;margin-top:8px" class="small muted"><span>'+ic('lock',16)+' No pide permisos ni datos de tarjeta.</span><span>Tus gastos quedan solo en tu celular.</span></div><button type="button" class="linkbtn" data-act="puertaNo" style="margin-top:12px">Seguir en el navegador</button></div>';}
+
 /* ---------- onboarding ---------- */
 var onbStep=0;
 function renderOnb(){var h='<div class="wrap" style="padding-bottom:40px">';
-if(onbStep===0){h+='<span class="serif" style="font-size:22px">Finanz<span style="color:var(--accent-ink)">App</span></span>'+instalBox('onb')+'<div style="display:flex;flex-direction:column;gap:12px;margin-top:24px"><h1 style="font-size:34px">Tus gastos, cargados en 10 segundos</h1><p style="margin:0;color:var(--soft);font-size:16px;line-height:1.5">Anotás desde el celular apenas gastás, te avisa de tus vencimientos y te muestra en qué se va la plata, en pesos o en dólares.</p></div><div class="card" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">'+[['plus','Cargás monto y en qué. La categoría te la sugerimos.'],['card','Cuotas repartidas solas en los meses que siguen.'],['bell','Alertas de vencimientos, aumentos y olvidos.'],['lock','Tus datos quedan solo en tu celular. Nadie más los ve.']].map(function(x){return '<div class="row small" style="color:var(--soft)"><span style="color:var(--accent-ink)">'+ic(x[0],18)+'</span><span>'+x[1]+'</span></div>';}).join('')+'</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><button type="button" class="btn" data-act="onbNext">Empezar</button><button type="button" class="btn plain" data-act="onbDemo">Ver primero con datos de ejemplo</button><button type="button" class="btn plain" data-act="copiaRestaurar">Ya la usaba: restaurar mi copia</button></div>';}
+if(onbStep===0){h+='<span class="serif" style="font-size:22px">Finanz<span style="color:var(--accent-ink)">App</span></span><div style="display:flex;flex-direction:column;gap:12px;margin-top:24px"><h1 style="font-size:34px">Tus gastos, cargados en 10 segundos</h1><p style="margin:0;color:var(--soft);font-size:16px;line-height:1.5">Anotás desde el celular apenas gastás, te avisa de tus vencimientos y te muestra en qué se va la plata, en pesos o en dólares.</p></div><div class="card" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">'+[['plus','Cargás monto y en qué. La categoría te la sugerimos.'],['card','Cuotas repartidas solas en los meses que siguen.'],['bell','Alertas de vencimientos, aumentos y olvidos.'],['lock','Tus datos quedan solo en tu celular. Nadie más los ve.']].map(function(x){return '<div class="row small" style="color:var(--soft)"><span style="color:var(--accent-ink)">'+ic(x[0],18)+'</span><span>'+x[1]+'</span></div>';}).join('')+'</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><button type="button" class="btn" data-act="onbNext">Empezar</button><button type="button" class="btn plain" data-act="onbDemo">Ver primero con datos de ejemplo</button><button type="button" class="btn plain" data-act="copiaRestaurar">Ya la usaba: restaurar mi copia</button></div>';}
 else if(onbStep===1){h+=stepsBar(1)+'<h1>Contanos un poco de vos</h1><div class="field"><label for="o-nombre">¿Cómo te llamamos?</label><input class="input" id="o-nombre" data-bind="perfil.nombre" value="'+esc(S.perfil.nombre)+'" autocomplete="given-name" placeholder="Tu nombre"></div><div class="field"><label for="o-nac">Fecha de nacimiento</label><input class="input" type="date" id="o-nac" data-bind="perfil.nac" value="'+esc(S.perfil.nac)+'"><span class="xs muted">Para saludarte en tu cumple.</span></div><div class="field"><label for="o-cobro">¿Qué día cobrás?</label><select class="input" id="o-cobro" data-bind="perfil.cobro">'+cobroOpts()+'</select><span class="xs muted" id="cobro-hint">'+cobroHint()+'</span></div><div style="display:flex;flex-direction:column;gap:8px"><button type="button" class="btn" data-act="onbNext">Siguiente</button><button type="button" class="btn plain" data-act="onbNext">Saltear este paso</button></div>';}
 else{h+=stepsBar(2)+'<h1>Hacela tuya'+(S.perfil.nombre?', '+esc(S.perfil.nombre):'')+'</h1><div class="flabel">Color de la app</div>'+swatches()+'<div class="flabel">Modo</div><div class="seg" role="group"><button type="button" data-act="modo" data-v="oscuro" aria-pressed="'+(S.ui.modo==='oscuro')+'">Oscuro</button><button type="button" data-act="modo" data-v="claro" aria-pressed="'+(S.ui.modo==='claro')+'">Claro</button></div><div class="flabel">¿Cómo querés que te hablemos?</div><button type="button" class="card" style="text-align:left;display:flex;flex-direction:column;gap:4px;'+(S.perfil.tono==='humor'?'border:1.5px solid var(--accent);background:var(--accent-bg)':'')+'" data-act="tono" data-v="humor" aria-pressed="'+(S.perfil.tono==='humor')+'"><b>Con humor</b><span class="small" style="color:var(--soft)">"Llevás 5 días sin cargar gastos. ¿Modo ahorrador extremo o te olvidaste?"</span></button><button type="button" class="card" style="text-align:left;display:flex;flex-direction:column;gap:4px;'+(S.perfil.tono==='directo'?'border:1.5px solid var(--accent);background:var(--accent-bg)':'')+'" data-act="tono" data-v="directo" aria-pressed="'+(S.perfil.tono==='directo')+'"><b>Directo</b><span class="small" style="color:var(--soft)">"Hace 5 días que no cargás gastos."</span></button><button type="button" class="btn" data-act="onbFin">Empezar a usarla</button>';}
 $('onb').innerHTML=h+'</div>';}
@@ -645,6 +667,7 @@ case 'demo':demo();tab='inicio';render();toast('Datos de ejemplo cargados');brea
 case 'borrarDemo':borrarDemo();break;
 case 'borrarTodo':if(confirmDel!=='todo'){confirmDel='todo';render();return;}var keep={perfil:S.perfil,ui:S.ui,dolar:S.dolar,alertas:S.alertas,lic:S.lic,presu:S.presuDemo?{}:S.presu,novVistas:S.novVistas};S=defaults();S.perfil=keep.perfil;S.ui=keep.ui;S.dolar=keep.dolar;S.alertas=keep.alertas;S.lic=keep.lic;S.presu=keep.presu;S.novVistas=keep.novVistas;S.onboarded=true;confirmDel=null;save();render();toast('Borramos tus movimientos y vencimientos');break;
 case 'instalar':if(!instEv)return;instEv.prompt();instEv.userChoice.then(function(r){instEv=null;if(r&&r.outcome==='accepted')instOk=true;refrescarInst();if(instOk)toast('Instalando FinanzApp…');}).catch(function(){});break;
+case 'puertaNo':puertaNo=true;renderPuerta();break;
 case 'instNo':S.ui.instNo=true;save();render();break;
 case 'copiarLink':(navigator.clipboard?navigator.clipboard.writeText(appUrl()):Promise.reject()).then(function(){toast('Link copiado. Pegalo en Safari.');}).catch(function(){toast(appUrl());});break;
 case 'onbNext':onbStep++;renderOnb();$('onb').scrollTop=0;break;
