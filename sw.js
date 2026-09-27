@@ -1,5 +1,5 @@
 // FinanzApp service worker: la app abre sin conexión y toma las actualizaciones cuando hay red.
-var CACHE = 'finanzapp-v3';
+var CACHE = 'finanzapp-v4';
 var SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
