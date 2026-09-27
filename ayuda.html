@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#11100E">
+<title>FinanzApp · Guía rápida</title>
+<meta name="description" content="Cómo instalar FinanzApp, activar Premium y empezar a usarla en 5 minutos.">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+:root{--bg:#11100E;--surface:#1C1A17;--surface2:#25221E;--line:#2F2B26;--text:#F3EEE4;--muted:#A39C90;--soft:#C9C1B4;--accent:#D4AF5A;--accent-bg:#2A241A;--accent-line:#4A3E26;--good:#7FCB98}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:640px;margin:0 auto;padding:24px 16px 56px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:600 22px Fraunces,Georgia,serif}
+.brand{display:flex;flex-direction:column;line-height:1.1}
+.brand b{font:600 20px Fraunces,Georgia,serif}
+.brand span{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+h1{font:400 34px/1.1 Fraunces,Georgia,serif;margin:0 0 10px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--soft);margin:0 0 20px}
+.cta{display:block;text-align:center;background:var(--accent);color:var(--bg);font-weight:700;text-decoration:none;padding:16px;border-radius:14px;font-size:17px}
+.index{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+.index a{font-size:14px;text-decoration:none;color:var(--soft);border:1px solid var(--line);border-radius:999px;padding:8px 12px}
+section{margin-top:40px}
+.step{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.num{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-line);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:15px}
+h2{font:400 26px/1.15 Fraunces,Georgia,serif;margin:0}
+h3{font-size:17px;margin:0 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:12px}
+.card.gold{background:var(--accent-bg);border-color:var(--accent-line)}
+ol,ul{margin:0;padding-left:20px}
+li{margin:6px 0}
+li::marker{color:var(--accent)}
+.k{display:inline-block;background:var(--surface2);border:1px solid var(--line);border-radius:7px;padding:1px 8px;font-size:14px;font-weight:600;white-space:nowrap}
+.code{font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em}
+.muted{color:var(--muted);font-size:14px}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.tabs div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tabs b{display:block;margin-bottom:4px}
+.tabs span:not(.pill){color:var(--muted);font-size:14px;line-height:1.45;display:block}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--bg);background:var(--accent);border-radius:999px;padding:2px 7px;vertical-align:2px;margin-left:4px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:10px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';color:var(--accent);font-weight:400;font-size:20px;line-height:1}
+details[open] summary::after{content:'–'}
+details p{margin:0;padding:0 16px 16px;color:var(--soft)}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center}
+@media (min-width:560px){h1{font-size:42px}.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo" aria-hidden="true">F</div>
+  <div class="brand"><b>FinanzApp</b><span>Guía rápida</span></div>
+</header>
+
+<h1>Empezá en <em>5 minutos</em>.</h1>
+<p class="lead">Instalala, activá tu código si tenés uno y cargá tu primer gasto. Tus gastos se guardan solo en tu celular: no hace falta crear cuenta ni dar tu mail.</p>
+<a class="cta" href="./">Abrir FinanzApp</a>
+
+<nav class="index" aria-label="Contenido">
+  <a href="#instalar">Instalar</a>
+  <a href="#premium">Activar Premium</a>
+  <a href="#primeros">Primeros pasos</a>
+  <a href="#app">Qué hay en la app</a>
+  <a href="#cuidar">Tu número y tu copia</a>
+  <a href="#tester">Si sos tester</a>
+  <a href="#dudas">Dudas</a>
+</nav>
+
+<section id="instalar">
+  <div class="step"><div class="num">1</div><h2>Instalala</h2></div>
+  <p class="muted">Se instala desde el navegador, sin Play Store ni App Store. No ocupa casi lugar.</p>
+  <div class="card">
+    <h3>Android</h3>
+    <ol>
+      <li>Abrí el link <b>con Chrome</b>. Si se abre en otro navegador (Samsung Internet, el de Instagram, etc.), la app te ofrece <span class="k">Instalar con Chrome</span>.</li>
+      <li>Tocá <span class="k">Instalar gratis</span>. Si no aparece, tocá los tres puntitos <span class="k">⋮</span> arriba a la derecha y elegí <span class="k">Instalar app</span>.</li>
+      <li>Listo: te queda el ícono dorado con la <b>F</b> en la pantalla de inicio.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>iPhone</h3>
+    <ol>
+      <li>Abrí el link <b>en Safari</b>.</li>
+      <li>Tocá <span class="k">Compartir</span> (el cuadrado con la flecha para arriba) y elegí <span class="k">Agregar a inicio</span>.</li>
+      <li>Abrila siempre <b>desde el ícono nuevo</b>, no desde Safari: en iPhone son dos lugares distintos y tus datos quedan en el ícono.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="premium">
+  <div class="step"><div class="num">2</div><h2>Activá Premium <span class="muted">(si tenés código)</span></h2></div>
+  <div class="card gold">
+    <p style="margin:0 0 10px">Tu código tiene esta forma: <span class="k code">FZP-XXXX-XXXX</span></p>
+    <ul>
+      <li><b>Si te pasaron un link con el código</b>, abrilo y se activa solo.</li>
+      <li><b>Si tenés el código escrito</b>: en la app andá a <span class="k">Ajustes</span> → <b>¿Tenés un código Premium?</b>, escribilo y tocá <span class="k">Activar</span>.</li>
+      <li>Un código sirve para <b>hasta 2 celulares</b> de la misma persona. No lo compartas: si se usa en otros teléfonos, se da de baja.</li>
+    </ul>
+  </div>
+  <p class="muted">Sin código usás el plan <b>Básico</b>, gratis y para siempre.</p>
+</section>
+
+<section id="primeros">
+  <div class="step"><div class="num">3</div><h2>Primeros pasos</h2></div>
+  <div class="card">
+    <ol>
+      <li><b>Contanos qué día cobrás</b> (<span class="k">Ajustes</span> → Sobre vos). Puede ser una fecha fija o un día hábil, como "4.º día hábil". Con eso la app calcula cuánto te queda por día hasta el próximo cobro.</li>
+      <li><b>Cargá tu primer gasto</b> con el botón <span class="k">+ Cargar gasto</span>: poné el monto y en qué fue (por ejemplo "súper" o "nafta"). La categoría te la sugiere sola.</li>
+      <li><b>¿Fue en cuotas o en dólares?</b> Elegilo al cargar: las cuotas se reparten solas mes a mes.</li>
+      <li><b>Sumá tus pagos fijos</b> en <span class="k">Venc.</span> (alquiler, tarjeta, servicios) y prendé las alertas.</li>
+    </ol>
+    <p class="muted" style="margin:12px 0 0">Tip: anotá en el momento. Si lo dejás para la noche, te olvidás del café y del kiosco.</p>
+  </div>
+</section>
+
+<section id="app">
+  <div class="step"><div class="num">4</div><h2>Qué hay en la app</h2></div>
+  <div class="tabs">
+    <div><b>Inicio</b><span>Cuánto gastaste, cuánto te queda y tus alertas.</span></div>
+    <div><b>Mi mes</b><span>Tus movimientos por categoría y cómo venís.</span></div>
+    <div><b>Presup. <span class="pill">PREMIUM</span></b><span>Un tope por categoría para no pasarte.</span></div>
+    <div><b>Venc.</b><span>Pagos fijos, con aviso antes de que venzan.</span></div>
+    <div><b>Locales</b><span>Comercios adheridos con descuento. Con Premium lo usás.</span></div>
+    <div><b>Ajustes</b><span>Tu plan, tu número, el dólar y tu copia de seguridad.</span></div>
+  </div>
+  <div class="card">
+    <h3>Dividir una juntada <span class="muted">(en Inicio, gratis)</span></h3>
+    <p style="margin:0;color:var(--soft)">Cargás quién puso cuánto y la app te dice quién le pasa a quién. Lo mandás al grupo por WhatsApp en un toque.</p>
+  </div>
+  <div class="card">
+    <h3>Usar un descuento en un local <span class="pill">PREMIUM</span></h3>
+    <ol>
+      <li>Antes de pagar, entrá al local en <span class="k">Locales</span> y tocá <span class="k">Usar descuento</span>.</li>
+      <li>Mostrá el <b>pase en vivo</b> en la caja: tiene un reloj que avanza y dura 10 minutos. Una captura de pantalla no vale.</li>
+      <li>Después tocá <span class="k">Ya pagué: cargar el gasto</span> y la app te suma cuánto ahorraste.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="cuidar">
+  <div class="step"><div class="num">5</div><h2>Tu número y tu copia</h2></div>
+  <div class="card">
+    <h3>Tu número de FinanzApp</h3>
+    <p style="margin:0;color:var(--soft)">En <span class="k">Ajustes</span> ves tu número, por ejemplo <span class="k code">FZ-7K3M9</span>. Te identifica sin datos personales y no cambia aunque pases a Premium. Si necesitás ayuda, pasalo junto con tu consulta.</p>
+  </div>
+  <div class="card gold">
+    <h3>Guardá una copia de seguridad</h3>
+    <p style="margin:0;color:var(--soft)">Como tus datos viven solo en tu celular, si lo cambiás o borrás la app se pierden. En <span class="k">Ajustes</span> → <span class="k">Guardar copia de seguridad</span> te bajás un archivo: guardalo en Drive o mandátelo por WhatsApp. En el celular nuevo usás <span class="k">Restaurar una copia</span> y recuperás todo, número incluido.</p>
+  </div>
+  <div class="card">
+    <h3>Compartila</h3>
+    <p style="margin:0;color:var(--soft)">¿Te sirve? En <span class="k">Ajustes</span> → <span class="k">Compartir FinanzApp</span> le mandás el link a quien quieras.</p>
+  </div>
+</section>
+
+<section id="tester">
+  <div class="step"><div class="num">6</div><h2>Si estás probando la app</h2></div>
+  <div class="card">
+    <p style="margin:0 0 10px;color:var(--soft)">¡Gracias por darnos una mano! Usala como si fuera tuya unos días y contanos:</p>
+    <ul>
+      <li>Qué no se entendió o te costó encontrar.</li>
+      <li>Qué falló: si podés, mandá una <b>captura de pantalla</b> y contá qué estabas haciendo.</li>
+      <li>Qué le agregarías o le sacarías.</li>
+    </ul>
+    <p class="muted" style="margin:12px 0 0">Mandalo por WhatsApp a quien te pasó la app, junto con tu número <span class="k code">FZ-…</span> (lo copiás desde Ajustes).</p>
+  </div>
+</section>
+
+<section id="dudas">
+  <div class="step"><div class="num">?</div><h2>Dudas frecuentes</h2></div>
+  <details><summary>¿Alguien ve mis gastos?</summary><p>No. Tus gastos, ingresos y presupuesto quedan solo en tu celular. Lo único que se registra es tu número de FinanzApp, tu plan y, cuando usás un descuento, en qué local y qué día.</p></details>
+  <details><summary>No veo los cambios nuevos</summary><p>Cerrá la app del todo (sacala de las apps abiertas) y abrila de nuevo con internet. A veces hace falta repetirlo una vez más.</p></details>
+  <details><summary>Cambié de celular</summary><p>Instalala en el nuevo y restaurá tu copia de seguridad. Si sos Premium, activá tu mismo código: tu número vuelve solo. Si sos Básico y no tenés copia, en Ajustes → Recuperar mi número podés escribirlo para mantenerlo.</p></details>
+  <details><summary>Dice que mi código ya se usó en otro celular</summary><p>Cada código sirve para 2 celulares. Si ya los usaste y cambiaste de teléfono, pedí que te lo liberen a quien te lo pasó.</p></details>
+  <details><summary>¿Funciona sin internet?</summary><p>Sí, para cargar y ver tus gastos. Necesitás internet para activar el código, ver locales y actualizar el dólar.</p></details>
+</section>
+
+<a class="cta" href="./" style="margin-top:40px">Abrir FinanzApp</a>
+
+<footer>FinanzApp es un producto de Head &amp; Hands · San Martín, Buenos Aires</footer>
+</div>
+</body>
+</html>
