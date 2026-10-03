@@ -1,5 +1,29 @@
 [
   {
+    "id": "2026-10-zonas",
+    "fecha": "2026-10-03",
+    "titulo": "¿Dónde querés descuentos?",
+    "texto": "Estamos sumando locales con descuento y queremos ir primero a donde más los necesitás. Entrá a Locales y contale a Henry en qué zona y qué tipo de comercio te gustaría tener. Y si tenés un local, desde ahí mismo te podés sumar."
+  },
+  {
+    "id": "2026-10-vencs-usd",
+    "fecha": "2026-10-03",
+    "titulo": "Suscripciones en dólares",
+    "texto": "Ahora podés cargar vencimientos en dólares (Netflix, Spotify, apps). Al marcarlos como pagados te preguntamos si los pagaste en pesos (con el dólar tarjeta, y lo podés corregir) o con tus dólares ahorrados, que se descuentan solos. Activá \"Suscripción mensual\" y en Análisis vas a ver cuánto tenés comprometido en el mes, en pesos y en dólares."
+  },
+  {
+    "id": "2026-10-resultado",
+    "fecha": "2026-10-03",
+    "titulo": "Tus ingresos y gastos, de un vistazo",
+    "texto": "En Análisis ves en grande el resultado del período: lo que entró menos lo que gastaste, con barras para comparar y cómo te fue en los meses anteriores. Tus ahorros e inversiones van aparte, en Presupuesto, con el total en pesos y en dólares. Al cargar un ahorro te preguntamos de dónde salió la plata (si fue plata extra, la cargamos también como ingreso). Y al cerrar el mes, si te sobró, te ofrecemos separarlo como ahorro."
+  },
+  {
+    "id": "2026-10-henry",
+    "fecha": "2026-10-03",
+    "titulo": "Conocé a Henry",
+    "texto": "Al costado de la pantalla vas a ver un botoncito con una H: es Henry, el soporte de FinanzApp. Escribile dudas, ideas o algo que no te funcione y le llega directo al equipo. Si te molesta, lo ocultás desde ahí mismo (y lo encontrás siempre en Ajustes)."
+  },
+  {
     "id": "2026-09-bienvenida",
     "fecha": "2026-09-26",
     "titulo": "Bienvenido a FinanzApp Premium",
