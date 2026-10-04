@@ -1,5 +1,5 @@
 // FinanzApp service worker: la app abre sin conexión y toma las actualizaciones cuando hay red.
-var CACHE = 'finanzapp-v39';
+var CACHE = 'finanzapp-v40';
 var SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
@@ -18,6 +18,8 @@ self.addEventListener('fetch', function (e) {
   var url = new URL(req.url);
   // Solo maneja archivos de la app y fuentes: la cotización del dólar y la activación de códigos van siempre directo a la red.
   if (url.origin !== location.origin && url.hostname.indexOf('fonts.') !== 0) return;
+  // Voces grabadas: directo a la red (el navegador las guarda solo; evita problemas de audio en iPhone).
+  if (url.pathname.indexOf('/voz/') >= 0) return;
   // Novedades: siempre intenta traer la versión nueva.
   if (url.pathname.slice(-15) === 'novedades.json') {
     e.respondWith(fetch(req).then(function (res) {
