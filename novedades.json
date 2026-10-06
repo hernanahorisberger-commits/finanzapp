@@ -1,5 +1,11 @@
 [
   {
+    "id": "2026-10-viajes",
+    "fecha": "2026-10-06",
+    "titulo": "Nuevo: Viajes",
+    "texto": "En Presupuesto ahora podés armar un viaje con sus fechas y monedas. Cargás cada gasto en la moneda del lugar (euros, yenes, lo que sea) y lo ves también en dólares, con el total por categoría. Si pagás con tarjeta queda pendiente hasta que cargues el resumen, y si lo pagás con tus dólares ahorrados no toca tu saldo del mes."
+  },
+  {
     "id": "2026-10-saldo-mes",
     "fecha": "2026-10-06",
     "titulo": "Lo que sobra pasa al mes siguiente",
