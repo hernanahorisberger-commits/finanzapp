@@ -1,5 +1,11 @@
 [
   {
+    "id": "2026-10-saldo-mes",
+    "fecha": "2026-10-06",
+    "titulo": "Lo que sobra pasa al mes siguiente",
+    "texto": "Si un mes te sobra (o te falta) plata, ahora se suma al siguiente como una línea aparte: \"Viene de septiembre\". No cuenta como ingreso, así que en cada mes ves solo lo que realmente entró y lo que gastaste. Debajo ves cuánto te queda en total y, si te sobró, un botón para mandarlo a ahorro o a una meta."
+  },
+  {
     "id": "2026-10-mes-calendario",
     "fecha": "2026-10-06",
     "titulo": "Todo por mes calendario",
