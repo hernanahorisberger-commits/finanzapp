@@ -1,5 +1,11 @@
 [
   {
+    "id": "2026-10-mes-calendario",
+    "fecha": "2026-10-06",
+    "titulo": "Todo por mes calendario",
+    "texto": "Ahora tus meses van del 1 al último día, sin importar cuándo cobres. Los gastos e ingresos de septiembre quedan en septiembre y los de octubre en octubre, en Análisis, Presupuesto y en el cierre del mes. Si tu sueldo se demora un día, lo cargás cuando cobrás y listo: cae en el mes de la fecha que pongas."
+  },
+  {
     "id": "2026-10-henry-voz",
     "fecha": "2026-10-04",
     "titulo": "Henry tiene cara y voz",
