@@ -1,5 +1,11 @@
 [
   {
+    "id": "2026-10-categoria",
+    "fecha": "2026-10-06",
+    "titulo": "Tocá una categoría",
+    "texto": "En Análisis, tocá cualquier categoría (o medio de pago) para ver sus movimientos y compararla con los 2 meses anteriores. En Viajes pasa lo mismo, y ahora el viaje tiene el mismo gráfico de torta que Análisis."
+  },
+  {
     "id": "2026-10-viajes",
     "fecha": "2026-10-06",
     "titulo": "Nuevo: Viajes",
